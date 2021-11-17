@@ -25,7 +25,7 @@ class SliderTableViewCell: UITableViewCell {
         if isRounded {
             stringValue = String(describing: Int(slider.value))
         } else {
-            let value = rounded(value: Double(slider.value), places: 2)
+            let value = rounded(value: Double(slider.value), places: 4)
             stringValue = String(describing: value)
         }
         displayLabel.text = stringValue
