@@ -12,6 +12,7 @@ class Population: NSObject {
     var players: [Player]
     var size: Int
     var generation: Int = 0
+    var averageFitness: Double = 0
     
     init(PopulationSize: Int, Features: Int, HiddenLayers: Int, HiddenLayerSize: Int) {
         players = Array<Player>()
@@ -83,6 +84,7 @@ class Population: NSObject {
         var deadCount: Double = 0
         var aliveTotal: Double = 0
         var aliveCount: Double = 0
+        var totalFitness: Double = 0
         
         for i in players {
             let fitness = i.fitness(goal: goal)
@@ -93,14 +95,25 @@ class Population: NSObject {
                 aliveTotal += fitness
                 aliveCount += 1
             }
+            totalFitness += fitness
             if fitness > highestFitness {
                 fittest = i
                 highestFitness = fitness
             }
         }
+        
+        self.averageFitness = totalFitness / Double(size)
+
         print("Generation " + String(describing: generation))
+        print("average fitness = \(Global.data.population.averageFitness)")
+        // not sure about reducing the mutation when most players get to the goal
+        // its possible that they wont find a faster path...
+        if averageFitness > 1 {
+            Global.data.mutationRate = 0.3
+        }
         print("dead average: " + String(describing: deadTotal / deadCount))
         print("alive average: " + String(describing: aliveTotal / aliveCount))
+        print("")
         
         return fittest
     }

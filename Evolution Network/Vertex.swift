@@ -170,7 +170,7 @@ class Vertex: NSObject {//, NSCoding
     func Value() -> Double {
         if isInput {
             //print(sigmoid(z: InputValue! ))
-            return sigmoid(z: InputValue!)
+            return InputValue!//sigmoid(z: InputValue!)
         }
         if cachedValue != nil {
             return cachedValue!

@@ -60,7 +60,7 @@ class DisplayScene: SKScene {
             var node = SKShapeNode(circleOfRadius: r)
             node.fillColor = .white
             if a.Bias != nil && a.Bias != 0 {
-                let alpha = abs((a.Bias! / 10))
+                let alpha = abs((a.Bias!))
                 node.fillColor = .init(white: 255, alpha: alpha)
             }
             node.position = CGPoint(x: x,y: y)
@@ -75,7 +75,7 @@ class DisplayScene: SKScene {
             var node = SKShapeNode(circleOfRadius: r)
             node.fillColor = .white
             if a.Bias != nil && a.Bias != 0 {
-                let alpha = abs((a.Bias! / 10))
+                let alpha = abs((a.Bias!))
                 node.fillColor = .init(white: 255, alpha: alpha)
             }
             node.position = CGPoint(x: x,y: y)
@@ -127,7 +127,7 @@ class DisplayScene: SKScene {
             var node = SKShapeNode(circleOfRadius: r)
             node.fillColor = .white
             if a.Bias != nil && a.Bias != 0 {
-                let alpha = abs((a.Bias! / 10))
+                let alpha = abs((a.Bias!))
                 node.fillColor = .init(white: 255, alpha: alpha)
             }
             node.position = CGPoint(x: x,y: y)
@@ -146,7 +146,7 @@ class DisplayScene: SKScene {
                 var node = SKShapeNode(circleOfRadius: r)
                 node.fillColor = .white
                 if a.Bias != nil && a.Bias != 0 {
-                    let alpha = abs((a.Bias! / 10))
+                    let alpha = abs((a.Bias!))
                     node.fillColor = .init(white: 255, alpha: alpha)
                 }
                 node.position = CGPoint(x: x,y: y)
@@ -163,7 +163,7 @@ class DisplayScene: SKScene {
             var node = SKShapeNode(circleOfRadius: r)
             node.fillColor = .white
             if a.Bias != nil && a.Bias != 0 {
-                let alpha = abs((a.Bias! / 10))
+                let alpha = abs((a.Bias!))
                 node.fillColor = .init(white: 255, alpha: alpha)
             }
             node.position = CGPoint(x: x,y: y)
@@ -188,7 +188,7 @@ class DisplayScene: SKScene {
                 pathToDraw.move(to: inNodes[inIndex].position)
                 pathToDraw.addLine(to: hiddenNodes[0][hiddenIndex].position)
                 line.path = pathToDraw
-                line.lineWidth = abs( brain.inputLayer[inIndex].Weight(ConnectedVertex: brain.hiddenLayers[0][hiddenIndex]) / 10) * Double(maxWidth)
+                line.lineWidth = abs( brain.inputLayer[inIndex].Weight(ConnectedVertex: brain.hiddenLayers[0][hiddenIndex])) * Double(maxWidth)
                 line.strokeColor = .white
                 addChild(line)
                 hiddenIndex += 1
@@ -210,7 +210,7 @@ class DisplayScene: SKScene {
                     pathToDraw.move(to: a.position)
                     pathToDraw.addLine(to: b.position)
                     line.path = pathToDraw
-                    line.lineWidth = abs( brain.hiddenLayers[prevLayer][aIndex].Weight(ConnectedVertex: brain.hiddenLayers[layer][bIndex]) / 10) * Double(maxWidth)
+                    line.lineWidth = abs( brain.hiddenLayers[prevLayer][aIndex].Weight(ConnectedVertex: brain.hiddenLayers[layer][bIndex])) * Double(maxWidth)
                     line.strokeColor = .white
                     addChild(line)
                     bIndex += 1
@@ -233,7 +233,7 @@ class DisplayScene: SKScene {
                 pathToDraw.move(to: a.position)
                 pathToDraw.addLine(to: b.position)
                 line.path = pathToDraw
-                line.lineWidth = abs( brain.hiddenLayers[hiddenNodes.count - 1][hiddenIndex].Weight(ConnectedVertex: brain.outputLayer[outIndex]) / 10) * Double(maxWidth)
+                line.lineWidth = abs( brain.hiddenLayers[hiddenNodes.count - 1][hiddenIndex].Weight(ConnectedVertex: brain.outputLayer[outIndex])) * Double(maxWidth)
                 line.strokeColor = .white
                 addChild(line)
                 outIndex += 1

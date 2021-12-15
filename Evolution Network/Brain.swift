@@ -129,7 +129,6 @@ class Brain: NSObject { //, NSCoding
             let vertex = Vertex(Outputs: HiddenLayerSize)
             inputLayer.append(vertex)
         }
-        
         hiddenLayers = Array<Array<Vertex>>()
         var tempInputs = inputLayer
         var prevLayer = Array<Vertex>()

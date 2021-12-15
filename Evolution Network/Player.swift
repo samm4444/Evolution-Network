@@ -12,7 +12,7 @@ class Player: NSObject {
 
     let id: Int
     
-    var stepSize: Double = 1 // maybe init this later
+    var stepSize: Double = 1.0 // maybe init this later
     
     var node: SKSpriteNode
     
@@ -36,7 +36,7 @@ class Player: NSObject {
         node.physicsBody?.contactTestBitMask = 1
         node.physicsBody?.mass = 1
 
-        brain = Brain(Inputs: Features, Outputs: 1, HiddenLayers: HiddenLayers, HiddenLayerSize: HiddenLayerSize)
+        brain = Brain(Inputs: Features, Outputs: 2, HiddenLayers: HiddenLayers, HiddenLayerSize: HiddenLayerSize)
         
         
         
@@ -93,12 +93,12 @@ class Player: NSObject {
         //let dx = withinStep(Step: stepSize, Value: dxV, Max: 2)
         //let dy = withinStep(Step: stepSize, Value: dyV, Max: 2)
         
-        let r = stepSize//withinStep(Step: stepSize, Value: AbsR, Max: 1)
+        let r = withinStep(Step: stepSize, Value: AbsR, Max: 1)
         //print(values[0])
         if id == Global.data.population.players[0].id {
-            print(values[0])
+            //print(values[0])
         }
-        let theeta = withinStep(Step: 360, Value: values[0], Max: 1)
+        let theeta = withinStep(Step: 360, Value: values[1], Max: 1)
         
         return PolarVector(r: r, angle: theeta)
         //return CGVector(dx: dx, dy: dy)

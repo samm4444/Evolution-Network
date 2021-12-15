@@ -37,7 +37,7 @@ class SettingsTableViewController: UITableViewController {
         if indexPath.row == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "sliderCell", for: indexPath) as! SliderTableViewCell
             
-            cell.setupSlider(title: "Population size",min: 2, max: 60, value: Float(Global.data.populationSize), IsRounded: true)
+            cell.setupSlider(title: "Population size",min: 2, max: 100, value: Float(Global.data.populationSize), IsRounded: true)
             cell.valueUpdated = { value in
                 Global.data.populationSize = Int(value)
             }
