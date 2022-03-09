@@ -27,7 +27,9 @@ class DisplayViewController: UIViewController {
                 // Present the scene
                 if let view = self.view as! SKView? {
                     view.presentScene(sceneNode)
-                    
+                    refreshScreen = {
+                        sceneNode.displayBrain(brain: Global.data.brain)
+                    }
                     view.ignoresSiblingOrder = true
                     
                     view.showsFPS = false
@@ -38,8 +40,10 @@ class DisplayViewController: UIViewController {
         }
     }
     
+    var refreshScreen: (() -> (Void))?
+    
     @IBAction func refreshButtonPressed(_ sender: Any) {
-        
+        refreshScreen?()
     }
     
     override var shouldAutorotate: Bool {

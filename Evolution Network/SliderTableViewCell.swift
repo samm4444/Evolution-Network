@@ -20,15 +20,17 @@ class SliderTableViewCell: UITableViewCell {
         updateDisplayLabel()
     }
     
+    var suffix = ""
+    
     func updateDisplayLabel() {
         var stringValue = ""
         if isRounded {
             stringValue = String(describing: Int(slider.value))
         } else {
-            let value = rounded(value: Double(slider.value), places: 4)
+            let value = rounded(value: Double(slider.value), places: 3)
             stringValue = String(describing: value)
         }
-        displayLabel.text = stringValue
+        displayLabel.text = stringValue + suffix
 
     }
     
@@ -36,11 +38,12 @@ class SliderTableViewCell: UITableViewCell {
     
     var valueUpdated: ((Float) -> (Void))?
     
-    func setupSlider(title: String, min: Float, max: Float, value: Float, IsRounded: Bool) {
+    func setupSlider(title: String, min: Float, max: Float, value: Float, IsRounded: Bool, suffix: String = "") {
         nameLabel.text = title
         slider.minimumValue = min
         slider.maximumValue = max
         slider.value = value
+        self.suffix = suffix
         self.isRounded = IsRounded
         updateDisplayLabel()
     }

@@ -12,7 +12,7 @@ class Player: NSObject {
 
     let id: Int
     
-    var stepSize: Double = 1.0 // maybe init this later
+    var stepSize: Double = 2.0
     
     var node: SKSpriteNode
     
@@ -35,6 +35,7 @@ class Player: NSObject {
         node.physicsBody?.collisionBitMask = 0
         node.physicsBody?.contactTestBitMask = 1
         node.physicsBody?.mass = 1
+        node.blendMode = .replace
 
         brain = Brain(Inputs: Features, Outputs: 2, HiddenLayers: HiddenLayers, HiddenLayerSize: HiddenLayerSize)
         
@@ -51,6 +52,7 @@ class Player: NSObject {
         node.physicsBody?.collisionBitMask = 0
         node.physicsBody?.contactTestBitMask = 1
         node.physicsBody?.mass = 1
+        node.blendMode = .replace
 
         self.brain = withBrain
         
@@ -69,9 +71,11 @@ class Player: NSObject {
         node.physicsBody?.collisionBitMask = 0
         node.physicsBody?.contactTestBitMask = 1
         node.physicsBody?.allowsRotation = false
-        node.physicsBody?.usesPreciseCollisionDetection = true
+        node.physicsBody?.usesPreciseCollisionDetection = false
         node.physicsBody?.mass = 0.1
         node.physicsBody?.affectedByGravity = false
+        node.blendMode = .replace
+
         node.name = "player " + String(describing: ID)
     
         brain = Brain(Parent: Parent.brain)
@@ -106,6 +110,9 @@ class Player: NSObject {
     
     
     
+    /// The fitness function
+    /// - Parameter goal: the node of the player that is being judged
+    /// - Returns: The value of the fitness
     func fitness(goal: SKSpriteNode) -> Double {
         var fitness: Double = 0
         
@@ -116,14 +123,12 @@ class Player: NSObject {
         
         if isDead && !won {
             // dead
-            //print("dead: " + String(describing: Double(1.0 / absDistanceBetween(PointOne: node.position, PointTwo: goal.position)))
 
             return Double(1.0 / absDistanceBetween(PointOne: node.position, PointTwo: goal.position))
         } else {
             //fitness = 1 / Float(distance(positions.last!, goal))
             
             // alive
-            //print("alive: " + String(describing: 0.3 + Double(1.0 / absDistanceBetween(PointOne: node.position, PointTwo: goal.position))))
             fitness = 0.000 + Double(1.0 / absDistanceBetween(PointOne: node.position, PointTwo: goal.position))
             
         }

@@ -7,66 +7,8 @@
 
 import UIKit
 
-class Brain: NSObject { //, NSCoding
-//    func encode(with coder: NSCoder) {
-//        var inputData = Array<Data>()
-//        for i in inputLayer {
-//            let d = try! NSKeyedArchiver.archivedData(withRootObject: i, requiringSecureCoding: false)
-//            inputData.append(d)
-//        }
-//        var hiddenLayersData = Array<Array<Data>>()
-//        var index = 0
-//        for i in hiddenLayers {
-//            hiddenLayersData.append(Array<Data>())
-//            for l in i  {
-//                let d = try! NSKeyedArchiver.archivedData(withRootObject: l, requiringSecureCoding: false)
-//                hiddenLayersData[index].append(d)
-//            }
-//            index += 1
-//        }
-//        var outputData = Array<Data>()
-//        for i in outputLayer {
-//            let d = try! NSKeyedArchiver.archivedData(withRootObject: i, requiringSecureCoding: false)
-//            outputData.append(d)
-//        }
-//        coder.encode(inputData, forKey: "inputLayer")
-//        coder.encode(hiddenLayersData, forKey: "hiddenLayers")
-//        coder.encode(outputData, forKey: "outputLayer")
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        let _inputData = coder.decodeObject(forKey: "inputLayer") as! Array<Data>
-//        let _hiddenLayersData = coder.decodeObject(forKey: "hiddenLayers") as! Array<Array<Data>>
-//        let _outputData = coder.decodeObject(forKey: "outputLayer") as! Array<Data>
-//
-//        var _inputLayer = Array<Vertex>()
-//        for i in _inputData {
-//            let v = try! NSKeyedUnarchiver.unarchivedObject(ofClass: Vertex.self, from: i)!
-//            _inputLayer.append(v)
-//        }
-//
-//        var _hiddenLayers = Array<Array<Vertex>>()
-//        var index = 0
-//        for i in _hiddenLayersData {
-//            _hiddenLayers.append(Array<Vertex>())
-//            for l in i  {
-//                let v = try! NSKeyedUnarchiver.unarchivedObject(ofClass: Vertex.self, from: l)!
-//                _hiddenLayers[index].append(v)
-//            }
-//            index += 1
-//        }
-//
-//        var _outputLayer = Array<Vertex>()
-//        for i in _outputData {
-//            let v = try! NSKeyedUnarchiver.unarchivedObject(ofClass: Vertex.self, from: i)!
-//            _outputLayer.append(v)
-//        }
-//
-//        self.inputLayer = _inputLayer
-//        self.hiddenLayers = _hiddenLayers
-//        self.outputLayer = _outputLayer
-//    }
-//
+class Brain: NSObject {
+
     
     var inputLayer: Array<Vertex>
     
@@ -173,6 +115,9 @@ class Brain: NSObject { //, NSCoding
         
     }
     
+    /// returns the values of the output nodes for given input nodes
+    /// - Parameter Inputs: values for input nodes
+    /// - Returns: values for output nodes
     func compute(Inputs: Array<Double>) -> Array<Double> {
         var inputIndex = 0
         for i in inputLayer {
@@ -190,6 +135,7 @@ class Brain: NSObject { //, NSCoding
         return outputs
     }
     
+    /// deletes stored cache for each node
     func clearVertexCache() {
         for i in inputLayer {
             i.clearCache()
@@ -206,6 +152,8 @@ class Brain: NSObject { //, NSCoding
         }
     }
     
+    /// mutate the weights and biases for each node in the network
+    /// - Parameter chance: the percentage chance of mutation for each node
     func mutate(chance: Double) {
         for i in inputLayer {
             i.mutate(chance: chance)

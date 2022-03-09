@@ -12,8 +12,15 @@ class DisplayScene: SKScene {
 
     var nodes: Array<SKShapeNode> = Array<SKShapeNode>()
     
+    let vSpacing = 320
+    let hSpacing = 38
+    let nodeRadius: CGFloat = 16
+    
+    var displayedBrain = Global.data.brain
+    
+    let showNegative = false
+    
     override func sceneDidLoad() {
-        
         
         displayBrain(brain: Global.data.brain)
         
@@ -29,12 +36,11 @@ class DisplayScene: SKScene {
     
     func displayBrain(brain: Brain) {
         removeAllChildren()
-        var Y = 150
-        let vSpacing = 270
+        let Y = 150
+        //let vSpacing = 270
         
-        
-        createNodes(brain: brain, startX: 80, startY: Y)
-
+        createNodes(brain: brain, startY: Y)
+        displayedBrain = brain
         
     }
     
@@ -47,14 +53,14 @@ class DisplayScene: SKScene {
         var aNodes = Array<SKShapeNode>()
         var bNodes = Array<SKShapeNode>()
         
-        let r: CGFloat = 30
+        let r: CGFloat = nodeRadius
         
-        let maxLineWidth = 10
+        //let maxLineWidth = 10
         
         var x = startX
         var y = startY
-        let hSpacing = 77
-        let vSpacing = 270
+        //let hSpacing = 77
+        //let vSpacing = 270
         
         for a in inputVertices {
             var node = SKShapeNode(circleOfRadius: r)
@@ -108,20 +114,20 @@ class DisplayScene: SKScene {
     }
     
     
-    func createNodes(brain: Brain, startX: Int, startY: Int) {
+    func createNodes(brain: Brain, startY: Int) {
         
         var inNodes = Array<SKShapeNode>()
         var hiddenNodes = Array<Array<SKShapeNode>>()
         var outNodes = Array<SKShapeNode>()
         
-        let r: CGFloat = 30
+        let r: CGFloat = nodeRadius
         
-        let maxLineWidth = 10
         
-        var x = startX
+        var rowWidth = ((brain.inputLayer.count - 1) * Int(r) * 2) + ((hSpacing - (2 * Int(r))) * (brain.inputLayer.count - 1))
+        var x = Int( (Int(frame.width) / 2) - (rowWidth / 2) )
         var y = startY
-        let hSpacing = 77
-        let vSpacing = 270
+        //let hSpacing = 77
+        //let vSpacing = 270
         
         for a in brain.inputLayer {
             var node = SKShapeNode(circleOfRadius: r)
@@ -136,11 +142,12 @@ class DisplayScene: SKScene {
             x += hSpacing
         }
         
-        x = startX
         y += vSpacing
         
         
         for i in 0...(brain.hiddenLayers.count - 1) {
+            let rowWidth = ((brain.hiddenLayers[i].count - 1) * Int(r) * 2) + ((hSpacing - (2 * Int(r))) * (brain.hiddenLayers[i].count - 1))
+            x = Int( (Int(frame.width) / 2) - (rowWidth / 2) )
             var tempHiddenNodes = Array<SKShapeNode>()
             for a in brain.hiddenLayers[i] {
                 var node = SKShapeNode(circleOfRadius: r)
@@ -155,9 +162,11 @@ class DisplayScene: SKScene {
                 x += hSpacing
             }
             hiddenNodes.append(tempHiddenNodes)
-            x = startX
             y += vSpacing
         }
+        
+        rowWidth = ((brain.outputLayer.count - 1) * Int(r) * 2) + ((hSpacing - (2 * Int(r))) * (brain.outputLayer.count - 1))
+        x = Int( (Int(frame.width) / 2) - (rowWidth / 2) )
         
         for a in brain.outputLayer {
             var node = SKShapeNode(circleOfRadius: r)
@@ -174,7 +183,7 @@ class DisplayScene: SKScene {
         
         // draw lines --
         
-        let maxWidth = 3
+        let maxWidth = 1.2
         
         // in to first hidden
         
@@ -188,8 +197,20 @@ class DisplayScene: SKScene {
                 pathToDraw.move(to: inNodes[inIndex].position)
                 pathToDraw.addLine(to: hiddenNodes[0][hiddenIndex].position)
                 line.path = pathToDraw
-                line.lineWidth = abs( brain.inputLayer[inIndex].Weight(ConnectedVertex: brain.hiddenLayers[0][hiddenIndex])) * Double(maxWidth)
-                line.strokeColor = .white
+                let edgeWeight = brain.inputLayer[inIndex].Weight(ConnectedVertex: brain.hiddenLayers[0][hiddenIndex])
+                line.alpha = ((abs( edgeWeight )))
+                line.lineWidth = maxWidth
+                //line.alpha = lineAlpha
+                if showNegative {
+                    if edgeWeight >= 0 {
+                        line.strokeColor = .systemGreen
+                    } else {
+                        line.strokeColor = .systemRed
+                    }
+                } else {
+                    line.strokeColor = .white
+                }
+                
                 addChild(line)
                 hiddenIndex += 1
             }
@@ -210,8 +231,18 @@ class DisplayScene: SKScene {
                     pathToDraw.move(to: a.position)
                     pathToDraw.addLine(to: b.position)
                     line.path = pathToDraw
-                    line.lineWidth = abs( brain.hiddenLayers[prevLayer][aIndex].Weight(ConnectedVertex: brain.hiddenLayers[layer][bIndex])) * Double(maxWidth)
-                    line.strokeColor = .white
+                    let edgeWeight = brain.hiddenLayers[prevLayer][aIndex].Weight(ConnectedVertex: brain.hiddenLayers[layer][bIndex])
+                    line.alpha = (abs( edgeWeight ))
+                    if showNegative {
+                        if edgeWeight >= 0 {
+                            line.strokeColor = .systemGreen
+                        } else {
+                            line.strokeColor = .systemRed
+                        }
+                    } else {
+                        line.strokeColor = .white
+                    }
+                    line.lineWidth = maxWidth
                     addChild(line)
                     bIndex += 1
                 }
@@ -233,8 +264,18 @@ class DisplayScene: SKScene {
                 pathToDraw.move(to: a.position)
                 pathToDraw.addLine(to: b.position)
                 line.path = pathToDraw
-                line.lineWidth = abs( brain.hiddenLayers[hiddenNodes.count - 1][hiddenIndex].Weight(ConnectedVertex: brain.outputLayer[outIndex])) * Double(maxWidth)
-                line.strokeColor = .white
+                let edgeWeight = brain.hiddenLayers[hiddenNodes.count - 1][hiddenIndex].Weight(ConnectedVertex: brain.outputLayer[outIndex])
+                line.alpha = (abs(edgeWeight ))
+                if showNegative {
+                    if edgeWeight >= 0 {
+                        line.strokeColor = .systemGreen
+                    } else {
+                        line.strokeColor = .systemRed
+                    }
+                } else {
+                    line.strokeColor = .white
+                }
+                line.lineWidth = maxWidth
                 addChild(line)
                 outIndex += 1
             }
@@ -249,7 +290,9 @@ class DisplayScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         
-        
+        if displayedBrain != Global.data.brain {
+            displayBrain(brain: Global.data.brain)
+        }
         
         
     }

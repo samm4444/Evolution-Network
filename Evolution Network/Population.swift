@@ -14,6 +14,12 @@ class Population: NSObject {
     var generation: Int = 0
     var averageFitness: Double = 0
     
+    /// init a population
+    /// - Parameters:
+    ///   - PopulationSize: number of players
+    ///   - Features: number of features in the player's brains
+    ///   - HiddenLayers: number of hidden layers  in the player's brains
+    ///   - HiddenLayerSize: number of nodes in each hidden layer of the player's brains
     init(PopulationSize: Int, Features: Int, HiddenLayers: Int, HiddenLayerSize: Int) {
         players = Array<Player>()
         size = PopulationSize
@@ -23,6 +29,10 @@ class Population: NSObject {
         }
     }
     
+    /// inits a population based on a given player
+    /// - Parameters:
+    ///   - withPlayer: player to be based on
+    ///   - PopulationSize: size of the population
     init(withPlayer: Player, PopulationSize: Int) {
         let fittestPlayer = withPlayer
         var newPlayers: [Player] = []
@@ -48,6 +58,10 @@ class Population: NSObject {
         players = newPlayers
     }
     
+    /// creates a new generation of players based on the fittest player
+    /// - Parameters:
+    ///   - goal: the goal to be reached
+    ///   - PopulationSize: size of the new population
     func reproduce(goal: SKSpriteNode, PopulationSize: Int) {
         let fittestPlayer = fittestPlayer(goal: goal)
         var newPlayers: [Player] = []
@@ -76,6 +90,10 @@ class Population: NSObject {
         players = newPlayers
     }
     
+    
+    /// returns the fittest player in the population
+    /// - Parameter goal: the node of the goal to be reached
+    /// - Returns: the fittest player
     func fittestPlayer(goal: SKSpriteNode) -> Player {
         var fittest: Player = Player(Features: 1, HiddenLayers: 1, HiddenLayerSize: 1)
         var highestFitness: Double = 0

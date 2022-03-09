@@ -7,68 +7,8 @@
 
 import UIKit
 
-class Vertex: NSObject {//, NSCoding
-//    func encode(with coder: NSCoder) {
-//        coder.encode(ID, forKey: "ID")
-//        coder.encode(weights, forKey: "weights")
-//        var outputVerticesData = Array<Data>()
-//        for i in outputVertices ?? [] { // gets stuck in a loop
-//            let d = try! NSKeyedArchiver.archivedData(withRootObject: i, requiringSecureCoding: false)
-//            outputVerticesData.append(d)
-//        }
-//
-//        coder.encode(outputVerticesData, forKey: "outputVertices")
-//
-//        var inputVerticesData = Array<Data>()
-//        for i in inputVertices ?? [] {
-//            let d = try! NSKeyedArchiver.archivedData(withRootObject: i, requiringSecureCoding: false)
-//            inputVerticesData.append(d)
-//        }
-//
-//        coder.encode(inputVerticesData, forKey: "inputVertices")
-//        coder.encode(isOutput, forKey: "isOutput")
-//        coder.encode(isInput, forKey: "isInput")
-//        coder.encode(InputValue, forKey: "InputValue")
-//        coder.encode(weightRange, forKey: "weightRange")
-//        coder.encode(bias, forKey: "bias")
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        let _ID = coder.decodeObject(forKey: "ID") as! Int
-//        let _weights = coder.decodeObject(forKey: "weights") as? Array<Double>
-//
-//        let _outputVerticesData = coder.decodeObject(forKey: "outputVertices") as! Array<Data>
-//        var _outputVertices = Array<Vertex>()
-//        for i in _outputVerticesData {
-//            let v = try! NSKeyedUnarchiver.unarchivedObject(ofClass: Vertex.self, from: i)!
-//            _outputVertices.append(v)
-//        }
-//
-//        let _inputVerticesData = coder.decodeObject(forKey: "inputVertices") as! Array<Data>
-//        var _inputVertices = Array<Vertex>()
-//        for i in _inputVerticesData {
-//            let v = try! NSKeyedUnarchiver.unarchivedObject(ofClass: Vertex.self, from: i)!
-//            _inputVertices.append(v)
-//        }
-//
-//        let _isOutput = coder.decodeObject(forKey: "isOutput") as! Bool
-//        let _isInput = coder.decodeObject(forKey: "isInput") as! Bool
-//        let _InputValue = coder.decodeObject(forKey: "InputValue") as? Double
-//        let _weightRange = coder.decodeObject(forKey: "weightRange") as! ClosedRange<Double>
-//        let _bias = coder.decodeObject(forKey: "bias") as? Double
-//
-//        self.ID = _ID
-//        self.weights = _weights
-//        self.outputVertices = _outputVertices
-//        self.inputVertices = _inputVertices
-//        self.isOutput = _isOutput
-//        self.isInput = _isInput
-//        self.InputValue = _InputValue
-//        self.cachedValue = nil
-//        self.weightRange = _weightRange
-//        self.bias = _bias
-//    }
-//    
+class Vertex: NSObject {
+   
 
     let ID: Int
     
@@ -163,10 +103,13 @@ class Vertex: NSObject {//, NSCoding
         
     }
     
+    /// delete the cached value for the node
     func clearCache() {
         cachedValue = nil
     }
     
+    /// shows the value of the node based on its inputs
+    /// - Returns: the node's value
     func Value() -> Double {
         if isInput {
             //print(sigmoid(z: InputValue! ))
@@ -188,13 +131,21 @@ class Vertex: NSObject {//, NSCoding
             value += weightedValue
         }
         value += bias ?? 0
-        
-        value = sigmoid(z: value)
+        if isOutput {
+            value = sigmoid(z: value)
+        } else {
+            value = relu(z: value)
+        }
+        // this line caches the value so that the vertex doesnt need to calculate its value
+        // every time. this saves a significant amount of time.
         cachedValue = value
         return value
     }
     
     
+    /// shows the weight of the edge between this vertex and the connected vertex
+    /// - Parameter ConnectedVertex: the vertex connected to this vertex
+    /// - Returns: the weight of the edge
     func Weight(ConnectedVertex: Vertex) -> Double {
         if isOutput {
             return 1.0
@@ -210,6 +161,8 @@ class Vertex: NSObject {//, NSCoding
         return 0
     }
     
+    /// sets the value of the node
+    /// - Parameter Value: the value to be set
     func setInputValue(Value: Double) {
         if isInput {
             InputValue = Value
@@ -223,10 +176,26 @@ class Vertex: NSObject {//, NSCoding
         return false
     }
     
-    func sigmoid(z: Double) -> Double {
-        return  1.0 / (1.0 + exp( 0 - (8 * z)))
+    /// the ReLU activation function
+    /// - Parameter z: input value
+    /// - Returns: output value
+    func relu(z: Double) -> Double {
+        if z > 0.0 {
+            return z
+        } else {
+            return 0.0
+        }
     }
-
+    
+    /// the Sigmoid activation function
+    /// - Parameter z: input value
+    /// - Returns: output value
+    func sigmoid(z: Double) -> Double {
+        return  1.0 / (1.0 + exp( 0 - (1 * z)))
+    }
+    
+    /// mutates the values of the weights and bias for the node
+    /// - Parameter chance: the percentage chance of the vertex's weights and bias being mutated
     func mutate(chance: Double) {
         if weights != nil {
             var index = 0

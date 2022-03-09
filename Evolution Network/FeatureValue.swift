@@ -17,6 +17,7 @@ class FeatureValue: NSObject {
         self.max = max
     }
     
+    /// the value between 0 and 1
     var squashed: Double {
         get {
             return (value / max)

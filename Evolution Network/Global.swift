@@ -10,7 +10,7 @@ import SpriteKit
 
 class Global: NSObject {
 
-    var populationSize: Int = 50
+    var populationSize: Int = 15
     
     var mutationRate: Double = 0.54347
     
@@ -24,9 +24,9 @@ class Global: NSObject {
     
     override init() {
         population = Population(PopulationSize: populationSize,
-                                Features: 8,
+                                Features: 19,
                                 HiddenLayers: 2,
-                                HiddenLayerSize: 7)
+                                HiddenLayerSize: 12) // 8 features w/o diagonals // 7 size
         brain = population.players.first!.brain
     }
     
